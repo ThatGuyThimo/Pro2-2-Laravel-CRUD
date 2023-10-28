@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +18,33 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('homepage');
 });
+
 Route::get('/login', function () {
-    return view('homepage');
+    return view('login');
 });
+
+Route::get('/register', function () {
+    return view('register');
+});
+
+Route::get('/logout', [UserController::class, 'logoutUser']);
+
+Route::get('/editPost', [SiteController::class, 'editPost']);
+
+Route::get('/favorites', [SiteController::class, 'getFavorites']);
+
+Route::get('/blogs', [SiteController::class, 'getPosts']);
+
+Route::get('/myposts', [SiteController::class, 'getUserPosts']);
+
+Route::get('/createblog', [SiteController::class, 'createBlog']);
+
+Route::get('/deletepost', [SiteController::class, 'deletePost']);
+
+Route::post('/registeruser', [UserController::class, 'registerUser']);
+
+Route::post('/loginuser', [UserController::class, 'loginUser']);
+
+Route::post('/createpost', [SiteController::class, 'createPost']);
+
+Route::post('/updatepost', [SiteController::class, 'updatePost']);

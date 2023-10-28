@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
-    <title>Homepage</title>
+    <title>Login</title>
 </head>
 <body class="bg-gray-500">
-    <header>
-        @include('navbar')
-    </header>
+    @include('navbar')
+
+    <section class="flex flex-col items-center m-2">
+        @foreach ($error as $item => $value)
+          {{ $item , $value }}  
+        @endforeach
+    </section>
 </body>
 </html>
