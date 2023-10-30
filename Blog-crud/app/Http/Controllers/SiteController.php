@@ -187,6 +187,57 @@ class SiteController extends Controller
             return redirect('login');
         }
     }
+    public function getDetails() {
+        if(session()->has('uuid')) {
+
+            $uuid = session('uuid');
+
+            $reqVisits = DB::table('visits')->where('user_id', $uuid)->first();
+
+            $req = [];
+            
+
+            if($reqVisits) {
+
+                $req['visits'] = $reqVisits->visits + 1;
+
+                session(['visits' => $reqVisits->visits + 1]);
+                $req["updated_at"] = date('Y-m-d H:i:s');
+
+                DB::table('visits')->where('user_id', $uuid)->update($req);
+        
+
+            } else {
+
+                $req['user_id'] = $uuid;
+                $req['visits'] = 1;
+                $req["created_at"] = date('Y-m-d H:i:s');
+                $req["updated_at"] = date('Y-m-d H:i:s');
+
+                session(['visits' => 1]);
+
+                DB::table('visits')->insert($req);
+            }
+
+            $id = $_GET['id'];
+
+
+            $reqPosts = DB::table('posts')->where('id', $id)->first();
+
+            
+            if($reqPosts) {
+
+                $reqPost = json_decode(json_encode($reqPosts), true);
+        
+                return view('details', ['post' => $reqPost]);
+
+            }
+
+
+        } else {
+            return redirect('login');
+        }
+    }
 
     public function getCategorys() {
 
@@ -202,11 +253,83 @@ class SiteController extends Controller
         return json_decode(json_encode($reqPosts), true);
     }
 
+    public function getFilteredPosts($category, $search) {
+
+        $reqPosts = DB::table('posts')->where('title', $search)->orWhere('content', $search)->get();
+
+        foreach ($category as $value) {
+            $reqPost = $reqPosts->orWhere('category', $value['name']);
+        }
+
+        return json_decode(json_encode($reqPosts), true);
+    }
+
     public function getPosts() {
         $categorys = $this->getCategorys();
         
         $reqPosts = $this->getAllPosts();
 
         return view('blogs', ['categorys' => $categorys, 'posts' => $reqPosts]);
+    }
+
+    public function getBlogData(Request $request) {
+
+        $categorys = $this->getCategorys();
+        $search = $request['search'];
+        // dd($request);
+        
+        // print_r($categorys);
+        // print_r($categorys[0]['name']);
+        $reqPosts = null;
+        if($search == "") {
+            $reqPosts = DB::table('posts')->get();
+        } else {
+            $reqPosts = DB::table('posts')->where('title', $search)->orWhere('content', $search)->get();
+        }
+        $data = json_decode(json_encode($reqPosts), true);
+
+        $dataResponse = [];
+        
+        foreach($categorys as $key => $value) {
+            if($request[$value['name']] = "on") {
+                print_r($request[$value['name']]);
+                // print_r($value['name']);
+                foreach ($data as $entry) {
+                    if ($entry['category'] == $value['name'] ) {
+                        // print_r($entry['category']);
+                        // print_r($value['name']);
+                        array_push($dataResponse, $entry);
+                    }
+                }
+            }
+        }
+        
+        dd($request);
+        dd($dataResponse);
+
+
+        // $reqPosts = $reqPosts->get();
+
+        // $data = json_decode(json_encode($reqPosts), true);
+
+        return view('blogs', ['categorys' => $categorys, 'posts' => $dataResponse]);
+    }
+
+    public function editProfile() {
+        if(session()->has('uuid')) {
+            $uuid = session('uuid');
+
+            $reqUuid = DB::table('users')->where('uuid', $uuid)->first();
+
+            if($reqUuid) {
+
+
+                return view('editProfile', ['name' => $reqUuid->username, 'email' => $reqUuid->email]);
+
+            }
+
+        } else {
+            return redirect('login');
+        }
     }
 }
