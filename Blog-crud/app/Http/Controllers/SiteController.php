@@ -45,6 +45,29 @@ class SiteController extends Controller
         } else {
             return redirect('login');
         }
+        // print(auth()->user());
+        // if(auth()->check() ? auth()->user()->uuid : false) {
+        //     // $uuid = session('uuid');
+        //     $uuid = auth()->user()->uuid;
+        //     print_r($uuid);
+        //     $id = $_GET['id'];
+
+        //     $reqPost = DB::table('posts')->where('id', $id)->first();
+
+
+        //     if($reqPost) {
+
+        //         $categorys = $this->getCategorys();
+        
+        //         $reqPost = json_decode(json_encode($reqPost), true);
+        
+        //         return view('edit', ['categorys' => $categorys, 'post' => $reqPost, 'id' => $id]);
+
+        //     }
+
+        // } else {
+        //     // return redirect('login');
+        // }
     }
 
     public function updatePost(Request $request) {
@@ -274,45 +297,65 @@ class SiteController extends Controller
 
     public function getBlogData(Request $request) {
 
-        $categorys = $this->getCategorys();
+        $categorys = json_decode($request['categorys'], true);
         $search = $request['search'];
+        // dd($search);
+
+        // dd($search == null);
         // dd($request);
+
+        // dd($categorys);
         
         // print_r($categorys);
         // print_r($categorys[0]['name']);
+        // return view('blogs', ['categorys' => $categorys, 'posts' => $this->getFilteredPosts($categorys, $search)]);
         $reqPosts = null;
-        if($search == "") {
+        if($search == "" || $search == null) {
             $reqPosts = DB::table('posts')->get();
         } else {
-            $reqPosts = DB::table('posts')->where('title', $search)->orWhere('content', $search)->get();
+            $reqPosts = DB::table('posts')->where('title','LIKE', '%'.$search.'%')->orWhere('content', $search)->get();
         }
         $data = json_decode(json_encode($reqPosts), true);
-
+        // dd($data);   
         $dataResponse = [];
-        
-        foreach($categorys as $key => $value) {
-            if($request[$value['name']] = "on") {
-                print_r($request[$value['name']]);
-                // print_r($value['name']);
+        if(count($categorys) > 0) {
+            foreach ($categorys as $value) {
+                // print_r($value);
                 foreach ($data as $entry) {
-                    if ($entry['category'] == $value['name'] ) {
-                        // print_r($entry['category']);
-                        // print_r($value['name']);
+                    if ($entry['category'] == $value ) {
                         array_push($dataResponse, $entry);
                     }
                 }
             }
+        } else {
+            $dataResponse = $data;
         }
+        // dd ($dataResponse);
+        // foreach($categorys as $key => $value) {
+        //     if($request[$value['name']] = "on") {
+        //         print_r($request[$value['name']]);
+        //         // print_r($value['name']);
+        //         foreach ($data as $entry) {
+        //             if ($entry['category'] == $value['name'] ) {
+        //                 // print_r($entry['category']);
+        //                 // print_r($value['name']);
+        //                 array_push($dataResponse, $entry);
+        //             }
+        //         }
+        //     }
+        // }
         
-        dd($request);
-        dd($dataResponse);
+        // dd($request);
+        // dd($dataResponse);
 
 
         // $reqPosts = $reqPosts->get();
 
         // $data = json_decode(json_encode($reqPosts), true);
 
-        return view('blogs', ['categorys' => $categorys, 'posts' => $dataResponse]);
+        return $dataResponse;
+
+        // return view('blogs', ['categorys' => $categorys, 'posts' => $dataResponse]);
     }
 
     public function editProfile() {
@@ -325,6 +368,38 @@ class SiteController extends Controller
 
 
                 return view('editProfile', ['name' => $reqUuid->username, 'email' => $reqUuid->email]);
+
+            }
+
+        } else {
+            return redirect('login');
+        }
+    }
+
+    public function togglePost() {
+        if(session()->has('uuid') && session()->get('level') == 1) {
+            $uuid = session('uuid');
+            $id = $_GET['id'];
+
+            $reqPost = DB::table('posts')->where('id', $id)->first();
+
+            if($reqPost) {
+    
+                $req = [];
+                if ($reqPost->status == 0) {
+                    $req['status'] = 1;
+                } else {
+                    $req['status'] = 0;
+                }
+                $req["updated_at"] = date('Y-m-d H:i:s');
+
+                DB::table('posts')->where('id', $id)->update($req);
+
+
+
+                
+
+                return redirect('blogs');
 
             }
 

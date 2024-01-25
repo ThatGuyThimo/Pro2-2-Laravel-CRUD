@@ -14,7 +14,7 @@
 
     <section class="flex flex-col items-center m-2">
         <div class="bg-gray-600 border-2 p-2 border-black rounded">
-            <form class="flex flex-col" method="post" action="/updateprofile">
+            <form class="flex flex-col" method="post" action="{{ route('updateprofile') }}">
                 <h1 class="text-white text-center">Edit profile details</h1>
                 <p class="text-white">Name</p>
                 <input name="username" class="rounded border-black p-1" type="text" placeholder="Name" value="{{$name}}">

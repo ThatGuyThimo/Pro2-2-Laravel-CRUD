@@ -14,7 +14,7 @@
 
     <section class="flex flex-col items-center m-2">
         <div class="bg-gray-600 border-2 p-2 border-black rounded">
-            <form class="flex flex-col" method="post" action="/registeruser">
+            <form class="flex flex-col" method="post" action="{{ route('registeruser') }}">
                 <h1 class="text-white text-center">Register</h1>
                 <p class="text-white">Name</p>
                 <input name="username" class="rounded border-black p-1" type="text" placeholder="Name">
@@ -24,7 +24,7 @@
                 <input name="password" class="rounded border-black p-1" type="Password" placeholder="Password">
                 <div class="flex flex-col items-center mt-2">
                     <div class="" >
-                        <a class="text-white hover:text-gray-300" href="/login">Login<a>
+                        <a class="text-white hover:text-gray-300" href="{{ route('login') }}">Login<a>
                         <button type="submit" name="register" value="register" class="transition-all duration-300 bg-blue-600 rounded p-2 hover:bg-blue-700">Register</button>
                     </div>
                 </div>

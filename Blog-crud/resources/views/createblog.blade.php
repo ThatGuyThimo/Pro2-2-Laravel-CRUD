@@ -15,7 +15,7 @@
 
     <section class="flex flex-col items-center m-2">
         <div class="bg-gray-600 border-2 w-2/3 p-2 border-black rounded">
-            <form class="flex flex-col" method="post" action="/createpost">
+            <form class="flex flex-col" method="post" action="{{route('createpost')}}">
                 <h1 class="text-white text-center">Create Blog</h1>
                 <p class="text-white">Title</p>
                 <input name="title" class="rounded w-60 border-black p-1" type="text" placeholder="Title">

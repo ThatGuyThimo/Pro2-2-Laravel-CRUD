@@ -21,40 +21,42 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
 
 Route::get('/register', function () {
     return view('register');
-});
+})->name('register');
 
-Route::get('/logout', [UserController::class, 'logoutUser']);
+Route::get('/logout', [UserController::class, 'logoutUser'])->name('logout');
 
-Route::get('/editpost', [SiteController::class, 'editPost']);
+Route::get('/editpost', [SiteController::class, 'editPost'])->name('editpost');
 
-Route::get('/editprofile', [SiteController::class, 'editProfile']);
+Route::get('/editprofile', [SiteController::class, 'editProfile'])->name('editprofile');
 
-Route::get('/details', [SiteController::class, 'getDetails']);
+Route::get('/details', [SiteController::class, 'getDetails'])->name('details');
 
-Route::get('/favorites', [SiteController::class, 'getFavorites']);
+Route::get('/favorites', [SiteController::class, 'getFavorites'])->name('favorites');
 
-Route::get('/', [SiteController::class, 'getPosts']);
+Route::get('/', [SiteController::class, 'getPosts'])->name('home');
 
-Route::get('/blogs', [SiteController::class, 'getPosts']);
+Route::get('/blogs', [SiteController::class, 'getPosts'])->name('blogs');
 
-Route::get('/myposts', [SiteController::class, 'getUserPosts']);
+Route::get('/myposts', [SiteController::class, 'getUserPosts'])->name('myposts');
 
-Route::get('/createblog', [SiteController::class, 'createBlog']);
+Route::get('/createblog', [SiteController::class, 'createBlog'])->name('createblog');
 
-Route::get('/deletepost', [SiteController::class, 'deletePost']);
+Route::get('/deletepost', [SiteController::class, 'deletePost'])->name('deletepost');
 
-Route::post('/registeruser', [UserController::class, 'registerUser']);
+Route::post('/registeruser', [UserController::class, 'registerUser'])->name('registeruser');
 
 Route::post('/getBlogData', [SiteController::class, 'getBlogData'])->name('getBlogData');
 
-Route::post('/loginuser', [UserController::class, 'loginUser']);
+Route::post('/loginuser', [UserController::class, 'loginUser'])->name('loginuser');
 
-Route::post('/updateprofile', [UserController::class, 'editProfile']);
+Route::post('/updateprofile', [UserController::class, 'editProfile'])->name('updateprofile');
 
-Route::post('/createpost', [SiteController::class, 'createPost']);
+Route::post('/createpost', [SiteController::class, 'createPost'])->name('createpost');
 
-Route::post('/updatepost', [SiteController::class, 'updatePost']);
+Route::post('/updatepost', [SiteController::class, 'updatePost'])->name('updatepost');
+
+Route::get('/togglepost', [SiteController::class, 'togglePost'])->name('togglepost');

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->longText('content');
             $table->string('category');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->foreign('user_id')->references('uuid')->on('users');
         });
